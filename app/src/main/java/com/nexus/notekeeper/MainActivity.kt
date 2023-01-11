@@ -6,11 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.nexus.notekeeper.model.Note
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nexus.notekeeper.screens.NoteScreen
+import com.nexus.notekeeper.screens.NoteViewModel
 import com.nexus.notekeeper.ui.theme.NoteKeeperTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,16 +21,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val notes = remember {
-                        mutableStateListOf<Note>()
-                    }
+                    val viewModel: NoteViewModel = viewModel()
+                    val notes = viewModel.getNotes()
                     NoteScreen(notes = notes, onInsert = {
-                        notes.add(it)
+                        viewModel.insert(it)
                     }, onRemove = {
-                        notes.remove(it)
+                        viewModel.remove(it)
                     })
                 }
             }
         }
     }
 }
+
