@@ -15,12 +15,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.nexus.notekeeper.model.Note
-import java.time.format.DateTimeFormatter
+import com.nexus.notekeeper.util.formatDate
 
 @Composable
 fun NoteCard(modifier: Modifier = Modifier, note: Note, onClick: (Note) -> Unit) {
     Surface(
-        modifier.fillMaxWidth()
+        modifier
+            .fillMaxWidth()
             .padding(4.dp)
             .clip(RoundedCornerShape(topEnd = 33.dp, bottomStart = 33.dp)),
         color = Color(0xFFDFE6EB),
@@ -29,11 +30,12 @@ fun NoteCard(modifier: Modifier = Modifier, note: Note, onClick: (Note) -> Unit)
         Column(
             modifier
                 .clickable { onClick.invoke(note) }
-                .padding(horizontal = 14.dp, vertical = 10.dp), horizontalAlignment = Alignment.Start) {
+                .padding(horizontal = 14.dp, vertical = 10.dp),
+            horizontalAlignment = Alignment.Start) {
             Text(text = note.title, style = MaterialTheme.typography.subtitle2)
             Text(text = note.description, style = MaterialTheme.typography.subtitle1)
             Text(
-                text = note.date.format(DateTimeFormatter.ofPattern("EEE, d MMM")),
+                text = formatDate(note.date.time),
                 style = MaterialTheme.typography.caption
             )
         }

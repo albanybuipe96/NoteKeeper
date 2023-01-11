@@ -17,16 +17,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nexus.notekeeper.R
 import com.nexus.notekeeper.components.NoteButton
-import com.nexus.notekeeper.components.NoteCard
+import com.nexus.notekeeper.components.NoteCard2
 import com.nexus.notekeeper.components.NoteField
-import com.nexus.notekeeper.data.NotesDataSource
 import com.nexus.notekeeper.model.Note
+import com.nexus.notekeeper.model.Note.Companion.noteColors
 
 @Composable
 fun NoteScreen(notes: List<Note>, onInsert: (Note) -> Unit, onRemove: (Note) -> Unit) {
@@ -78,7 +78,13 @@ fun NoteScreen(notes: List<Note>, onInsert: (Note) -> Unit, onRemove: (Note) -> 
             NoteButton(text = "Save", onClick = {
                 if (title.isNotEmpty() && description.isNotEmpty()) {
                     // 1. Save note
-                    onInsert(Note(title = title, description = description))
+                    onInsert(
+                        Note(
+                            title = title,
+                            description = description,
+                            color = noteColors.random().toArgb()
+                        )
+                    )
                     Toast.makeText(context, "Note added!", Toast.LENGTH_SHORT).show()
                     // 2. Clear fields
                     title = ""
@@ -89,16 +95,10 @@ fun NoteScreen(notes: List<Note>, onInsert: (Note) -> Unit, onRemove: (Note) -> 
         Divider(modifier = Modifier.padding(10.dp))
         LazyColumn {
             items(notes) { note ->
-                NoteCard(note = note, onClick = {
+                NoteCard2(note = note, onDelete = {
                     onRemove(it)
-                })
+                }, modifier = Modifier.padding(bottom = 12.dp))
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NoteScreenPreview() {
-    NoteScreen(notes = NotesDataSource().getNotes(), onRemove = {}, onInsert = {})
 }
